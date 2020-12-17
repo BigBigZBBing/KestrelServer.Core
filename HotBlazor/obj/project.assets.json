@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\zbb58\\source\\repos\\HotBlazor\\HotBlazor\\HotBlazor.csproj",
+      "projectUniqueName": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\HotBlazor\\HotBlazor\\HotBlazor.csproj",
       "projectName": "HotBlazor",
-      "projectPath": "C:\\Users\\zbb58\\source\\repos\\HotBlazor\\HotBlazor\\HotBlazor.csproj",
+      "projectPath": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\HotBlazor\\HotBlazor\\HotBlazor.csproj",
       "packagesPath": "C:\\Users\\zbb58\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\zbb58\\source\\repos\\HotBlazor\\HotBlazor\\obj\\",
+      "outputPath": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\HotBlazor\\HotBlazor\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
