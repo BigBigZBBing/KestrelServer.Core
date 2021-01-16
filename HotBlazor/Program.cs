@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using System.Net;
 using System.Security.Authentication;
+using System.Text;
+using System.IO;
+using Microsoft.AspNetCore.Connections;
 
 namespace HotBlazor
 {
@@ -57,44 +60,46 @@ namespace HotBlazor
                     //同步IO
                     options.AllowSynchronousIO = true;
                     //HTTP监听地址和端口
-                    options.Listen(IPAddress.Loopback, 5000, listenOptions =>
-                    {
-                        //不用UseHttps记录明文
-                        listenOptions.UseConnectionLogging();
-                        //配置协议
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                    });
+                    //options.Listen(IPAddress.Loopback, 5000, listenOptions =>
+                    //{
+                    //    //不用UseHttps记录明文
+                    //    listenOptions.UseConnectionLogging();
+                    //    //配置协议
+                    //    listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                    //});
                     //HTTPS监听地址和端口
 #if HTTPS
-                    options.Listen(IPAddress.Loopback, 5001, listenOptions =>
-                    {
-                        //在UseHttps之前记录加密
-                        listenOptions.UseConnectionLogging();
-                        //设置证书和密码
-                        listenOptions.UseHttps("testCert.pfx", "testPassword", config =>
-                        {
-                            //配置SSL
-                            config.SslProtocols = SslProtocols.Tls12;
-                        });
-                        //在UseHttps之前记录解密
-                        listenOptions.UseConnectionLogging();
-                    });
+                    //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                    //{
+                    //    //在UseHttps之前记录加密
+                    //    listenOptions.UseConnectionLogging();
+                    //    //设置证书和密码
+                    //    listenOptions.UseHttps("testCert.pfx", "testPassword", config =>
+                    //    {
+                    //        //配置SSL
+                    //        config.SslProtocols = SslProtocols.Tls12;
+                    //    });
+                    //    //在UseHttps之前记录解密
+                    //    listenOptions.UseConnectionLogging();
+                    //});
 #endif
 
 #if UNIX
                     //在Linux使用Nginx的高性能接套字
-                    options.ListenUnixSocket("/tmp/kestrel-test.sock");
-                    options.ListenUnixSocket("/tmp/kestrel-test.sock", listenOptions =>
-                    {
-                        listenOptions.UseHttps("testCert.pfx", "testpassword");
-                    });
+                    //options.ListenUnixSocket("/tmp/kestrel-test.sock");
+                    //options.ListenUnixSocket("/tmp/kestrel-test.sock", listenOptions =>
+                    //{
+                    //    listenOptions.UseHttps("testCert.pfx", "testpassword");
+                    //});
 #endif
 
 #if TCP
                     options.Listen(IPAddress.Loopback, 8787, listenOptions =>
                     {
                         //配置协议 不使用HTTP1和HTTP2 就只能接收TCP协议了
-                        listenOptions.Protocols = HttpProtocols.None;
+                        //listenOptions.Protocols = HttpProtocols.None;
+                        listenOptions.UseConnectionHandler<SocketHandler>();
+                        listenOptions.UseConnectionLogging("TcpInfo");
                     });
 #endif
 
@@ -107,15 +112,15 @@ namespace HotBlazor
                 webBuilder.Configure(app =>
                 {
                     //引用WebSocket中间件 可以接入WebSocket的协议
-                    app.UseMiddleware<SocketMode.WebSocketMidWare>();
+                    //app.UseMiddleware<SocketMode.WebSocketMidWare>();
                     //(测试用)
-                    app.Run(context => context.Response.WriteAsync("Hello World."));
+                    //app.Run(context => context.Response.WriteAsync("Hello World."));
                 });
 
                 webBuilder.ConfigureLogging(logging =>
                 {
                     //清除所有日志代理
-                    logging.ClearProviders();
+                    //logging.ClearProviders();
                 });
 
             }).Build().Run();
