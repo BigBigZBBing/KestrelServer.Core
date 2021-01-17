@@ -60,37 +60,37 @@ namespace HotBlazor
                     //同步IO
                     options.AllowSynchronousIO = true;
                     //HTTP监听地址和端口
-                    //options.Listen(IPAddress.Loopback, 5000, listenOptions =>
-                    //{
-                    //    //不用UseHttps记录明文
-                    //    listenOptions.UseConnectionLogging();
-                    //    //配置协议
-                    //    listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                    //});
+                    options.Listen(IPAddress.Loopback, 5000, listenOptions =>
+                    {
+                        //不用UseHttps记录明文
+                        listenOptions.UseConnectionLogging();
+                        //配置协议
+                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                    });
                     //HTTPS监听地址和端口
 #if HTTPS
-                    //options.Listen(IPAddress.Loopback, 5001, listenOptions =>
-                    //{
-                    //    //在UseHttps之前记录加密
-                    //    listenOptions.UseConnectionLogging();
-                    //    //设置证书和密码
-                    //    listenOptions.UseHttps("testCert.pfx", "testPassword", config =>
-                    //    {
-                    //        //配置SSL
-                    //        config.SslProtocols = SslProtocols.Tls12;
-                    //    });
-                    //    //在UseHttps之前记录解密
-                    //    listenOptions.UseConnectionLogging();
-                    //});
+                    options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                    {
+                        //在UseHttps之前记录加密
+                        listenOptions.UseConnectionLogging();
+                        //设置证书和密码
+                        listenOptions.UseHttps("testCert.pfx", "testPassword", config =>
+                        {
+                            //配置SSL
+                            config.SslProtocols = SslProtocols.Tls12;
+                        });
+                        //在UseHttps之前记录解密
+                        listenOptions.UseConnectionLogging();
+                    });
 #endif
 
 #if UNIX
                     //在Linux使用Nginx的高性能接套字
-                    //options.ListenUnixSocket("/tmp/kestrel-test.sock");
-                    //options.ListenUnixSocket("/tmp/kestrel-test.sock", listenOptions =>
-                    //{
-                    //    listenOptions.UseHttps("testCert.pfx", "testpassword");
-                    //});
+                    options.ListenUnixSocket("/tmp/kestrel-test.sock");
+                    options.ListenUnixSocket("/tmp/kestrel-test.sock", listenOptions =>
+                    {
+                        listenOptions.UseHttps("testCert.pfx", "testpassword");
+                    });
 #endif
 
 #if TCP
@@ -112,16 +112,9 @@ namespace HotBlazor
                 webBuilder.Configure(app =>
                 {
                     //引用WebSocket中间件 可以接入WebSocket的协议
-                    //app.UseMiddleware<SocketMode.WebSocketMidWare>();
-                    //(测试用)
-                    //app.Run(context => context.Response.WriteAsync("Hello World."));
+                    app.UseMiddleware<SocketMode.WebSocketMidWare>();
                 });
 
-                webBuilder.ConfigureLogging(logging =>
-                {
-                    //清除所有日志代理
-                    //logging.ClearProviders();
-                });
 
             }).Build().Run();
         }

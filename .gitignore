@@ -1,3 +1,5 @@
 /.vs
 /HotBlazor/bin
 /HotBlazor/obj
+/Kestrel.Tcp/bin
+/Kestrel.Tcp/obj

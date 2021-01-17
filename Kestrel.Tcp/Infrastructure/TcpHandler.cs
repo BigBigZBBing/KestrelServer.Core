@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Connections;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -7,14 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotBlazor
+namespace Kestrel.Tcp.Infrastructure
 {
-    public class SocketHandler : ConnectionHandler
+    public class TcpHandler : ConnectionHandler
     {
         public override async Task OnConnectedAsync(ConnectionContext connection)
         {
             var connectionId = connection.ConnectionId;
-            Console.WriteLine($"欢迎用户{connectionId}加入");
+            Console.WriteLine($"欢迎用户{connection.RemoteEndPoint}加入");
+
             IDuplexPipe pipe = connection.Transport;
             PipeReader pipeReader = pipe.Input;
 
@@ -22,13 +24,12 @@ namespace HotBlazor
             {
                 try
                 {
-                    pipeReader.
                     ReadResult readResult = await pipeReader.ReadAsync();
                     ReadOnlySequence<byte> readResultBuffer = readResult.Buffer;
 
                     if (readResult.IsCompleted)
                     {
-                        Console.WriteLine($"用户{connectionId}退出");
+                        Console.WriteLine($"用户{connection.RemoteEndPoint}退出");
                         break;
                     }
 
@@ -39,9 +40,9 @@ namespace HotBlazor
 
                     pipeReader.AdvanceTo(readResultBuffer.End, readResultBuffer.End);
                 }
-                catch (System.Exception ex)
+                catch
                 {
-                    Console.WriteLine($"用户{connectionId}退出");
+                    Console.WriteLine($"用户{connection.RemoteEndPoint}退出");
                     break;
                 }
             }

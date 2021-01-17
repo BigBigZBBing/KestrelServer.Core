@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\HotBlazor\\HotBlazor\\HotBlazor.csproj",
+      "projectUniqueName": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\KestrelServer.Core\\HotBlazor\\HotBlazor.csproj",
       "projectName": "HotBlazor",
-      "projectPath": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\HotBlazor\\HotBlazor\\HotBlazor.csproj",
+      "projectPath": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\KestrelServer.Core\\HotBlazor\\HotBlazor.csproj",
       "packagesPath": "C:\\Users\\zbb58\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\HotBlazor\\HotBlazor\\obj\\",
+      "outputPath": "C:\\Users\\zbb58\\source\\repos\\zbb5896\\KestrelServer.Core\\HotBlazor\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -68,7 +68,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
