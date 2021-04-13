@@ -15,7 +15,7 @@ using System.Text;
 using System.IO;
 using Microsoft.AspNetCore.Connections;
 
-namespace HotBlazor
+namespace Ketrel.Http
 {
     class Program
     {
@@ -98,7 +98,7 @@ namespace HotBlazor
                     {
                         //配置协议 不使用HTTP1和HTTP2 就只能接收TCP协议了
                         //listenOptions.Protocols = HttpProtocols.None;
-                        listenOptions.UseConnectionHandler<SocketHandler>();
+                        //listenOptions.UseConnectionHandler<SocketHandler>();
                         listenOptions.UseConnectionLogging("TcpInfo");
                     });
 #endif
@@ -108,13 +108,6 @@ namespace HotBlazor
                         // Configure endpoint defaults
                     });
                 });
-
-                webBuilder.Configure(app =>
-                {
-                    //引用WebSocket中间件 可以接入WebSocket的协议
-                    app.UseMiddleware<SocketMode.WebSocketMidWare>();
-                });
-
 
             }).Build().Run();
         }

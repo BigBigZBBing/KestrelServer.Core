@@ -11,18 +11,20 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore;
+using System.Threading;
+using System.Text;
 
 namespace Kestrel.Tcp
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
             new WebHostBuilder()
-            .UseKestrel()
-            .ConfigureKestrel(kestrelOption =>
+            .UseKestrel(kestrelOption =>
             {
-                kestrelOption.Listen(IPAddress.Loopback, 8001, listenOptions =>
+                kestrelOption.Listen(IPAddress.Any, 7447, listenOptions =>
                 {
                     listenOptions.Protocols = HttpProtocols.None;
                     listenOptions.UseConnectionHandler<TcpHandler>();

@@ -8,30 +8,28 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HotBlazor
+namespace Kestrel.Ws
 {
     public static class SocketMode
     {
-        public static async Task<string> RecvAsync(this WebSocket webSocket, CancellationToken cancellationToken)
-        {
-            var ms = new MemoryStream();
-            var buffer = new ArraySegment<byte>(new byte[1024 * 8]);
+        static List<WebSocket> sockets = new List<WebSocket>();
 
+        public static async Task<string> Receive(this WebSocket webSocket, CancellationToken cancellationToken)
+        {
+            var buffer = new ArraySegment<byte>(new byte[1024 * 4]);
+            using MemoryStream stream = new MemoryStream();
             WebSocketReceiveResult result;
             do
             {
                 result = await webSocket.ReceiveAsync(buffer, cancellationToken);
-                ms.Write(buffer.Array, buffer.Offset, result.Count - buffer.Offset);
+                stream.Write(buffer.Array, buffer.Offset, result.Count - buffer.Offset);
             } while (!result.EndOfMessage);
-            ms.Seek(0, SeekOrigin.Begin);
-            var reader = new StreamReader(ms);
-            var s = reader.ReadToEnd();
-            reader.Dispose();
-            ms.Dispose();
-            return s;
+            stream.Seek(0, SeekOrigin.Begin);
+            using StreamReader reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
 
-        public static async Task SendAsync(this WebSocket webSocket, string msg)
+        public static async Task Send(this WebSocket webSocket, string msg)
         {
             CancellationToken cancellation = default(CancellationToken);
             var buf = Encoding.UTF8.GetBytes(msg);
@@ -53,6 +51,9 @@ namespace HotBlazor
                 if (context.Request.Path == "/ws" && context.WebSockets.IsWebSocketRequest)
                 {
                     var socket = await context.WebSockets.AcceptWebSocketAsync();
+                    sockets.Add(socket);
+                    socket.Send($"欢迎{context.Connection.Id}");
+                    string message = await socket.Receive(CancellationToken.None);
                 }
                 else
                 {
