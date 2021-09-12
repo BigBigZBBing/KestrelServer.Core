@@ -52,7 +52,7 @@ namespace Kestrel.Ws
                 {
                     var socket = await context.WebSockets.AcceptWebSocketAsync();
                     sockets.Add(socket);
-                    socket.Send($"欢迎{context.Connection.Id}");
+                    await socket.Send($"欢迎{context.Connection.Id}");
                     string message = await socket.Receive(CancellationToken.None);
                 }
                 else

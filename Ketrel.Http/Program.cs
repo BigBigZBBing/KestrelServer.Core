@@ -1,25 +1,20 @@
-﻿#define HTTPS
-#define TCP
-#define UNIX
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
+﻿#define HTTP
+//#define HTTPS
+//#define TCP
+//#define UNIX
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using System.Net;
-using System.Security.Authentication;
-using System.Text;
-using System.IO;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Net;
 
 namespace Ketrel.Http
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Host.CreateDefaultBuilder(args).ConfigureWebHost(webBuilder =>
             {
@@ -59,6 +54,8 @@ namespace Ketrel.Http
 
                     //同步IO
                     options.AllowSynchronousIO = true;
+
+#if HTTP
                     //HTTP监听地址和端口
                     options.Listen(IPAddress.Loopback, 5000, listenOptions =>
                     {
@@ -66,7 +63,14 @@ namespace Ketrel.Http
                         listenOptions.UseConnectionLogging();
                         //配置协议
                         listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        //原始连接回调
+                        listenOptions.Use((context, next) =>
+                        {
+                            return next?.Invoke();
+                        });
                     });
+#endif
+
                     //HTTPS监听地址和端口
 #if HTTPS
                     options.Listen(IPAddress.Loopback, 5001, listenOptions =>
@@ -102,14 +106,23 @@ namespace Ketrel.Http
                         listenOptions.UseConnectionLogging("TcpInfo");
                     });
 #endif
-
-                    options.ConfigureEndpointDefaults(listenOptions =>
-                    {
-                        // Configure endpoint defaults
-                    });
                 });
 
-            }).Build().Run();
+                webBuilder.ConfigureServices((context, services) =>
+                {
+
+                });
+                webBuilder.Configure((context, app) =>
+                {
+                    app.Use(async (context, next) =>
+                    {
+
+                        await next?.Invoke();
+
+                    });
+                });
+            })
+            .Build().Run();
         }
     }
 }

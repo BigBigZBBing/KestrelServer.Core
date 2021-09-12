@@ -24,7 +24,14 @@ namespace Kestrel.Ws
 
                 webBuilder.Configure(app =>
                 {
-                    app.UseWebSockets();
+                    var options = new WebSocketOptions()
+                    {
+                        //长连接检测间隔
+                        KeepAliveInterval = TimeSpan.FromMinutes(2)
+                    };
+                    //设置跨域地址
+                    options.AllowedOrigins.Add("*");
+                    app.UseWebSockets(options);
                     app.UseMiddleware<SocketMode.WebSocketMidWare>();
                 });
             }).Build().Run();
